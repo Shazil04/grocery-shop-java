@@ -75,6 +75,12 @@ public static void showStock(String[] items, float[] price, int[] quantity) {
         float totalBill = 0f;
         int idx  , myQuantity;
         float discount = 0f;
+
+        String cartItems[] = new String[100];
+        float cartPrices[] = new float[100];
+        int cartquantity[] = new int[100];
+        int cartIndex = 0;
+
         System.out.println("=*=*=*=*=*=*=*=*=*=*.......WELCOME TO HOW'S GROCERY STORE........*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
         System.out.println("=*=*=*=*=*=*=*=*=*=*.............WHERE CHOICE IS YOURS..........*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
         while(true){
@@ -82,18 +88,21 @@ public static void showStock(String[] items, float[] price, int[] quantity) {
             String choice = sc.nextLine();
 
             if(choice.equalsIgnoreCase("shop")){
-                System.out.println("Enter your items to buy ot type \"complete\" to stop shopping" );
                 while(true){
-                System.out.print("Enter the item you want to buy: ");
+                System.out.println("Enter item you want to buy OR type \"complete\" to stop shopping" );
                 String myItem = sc.nextLine();
                 if (myItem.equalsIgnoreCase("complete")) {
                     break; 
                 }
                if(availabilityCheck(items , myItem)){
-                    System.out.print("Enter the quantity of " + myItem + ":  " );
+                    System.out.print("Enter the quantity of " + myItem + " in numbers:  " );
                     myQuantity = sc.nextInt();
                     sc.nextLine();
                     idx = findingIndex(items , myItem);
+                    cartItems[cartIndex] = myItem;
+                    cartquantity[cartIndex] = myQuantity;
+                    cartPrices[cartIndex] = price[idx];
+                    cartIndex++;
                 }
                 else{
                     System.out.println("We are very sorry , Item is out of stock");
@@ -123,21 +132,35 @@ public static void showStock(String[] items, float[] price, int[] quantity) {
                 System.out.println("Invalid Choice! please try again with correct choice!");
             }
         }
+            if (cartIndex > 0) {
+                System.out.println("\n============= YOUR CART SUMMARY =============");
+                System.out.printf("%-15s %-10s %-10s %-10s\n", "Item", "Qty", "Price", "Total");
+
+            for (int i = 0; i < cartIndex; i++) {
+                float itemTotal = cartquantity[i] * cartPrices[i];
+                System.out.printf("%-15s %-10d %-10.2f %-10.2f\n",
+                          cartItems[i], cartquantity[i], cartPrices[i], itemTotal);
+    }
+            System.out.println("=============================================");
+}
         if (totalBill>0){
-        float grandtotal = totalBill;
-        discount = totalDiscount(totalBill);
-        totalBill-=discount;
-        System.out.println("your Grand total is: " + grandtotal);
-        System.out.println("your discount is: " + discount);
-        System.out.println("your final total bill is: " + totalBill + "\n.....=*=*=*=*=*=*=*=Happy Shopping with HOW'S......=*=*=*=*=*=*");
+            float grandtotal = totalBill;
+            discount = totalDiscount(totalBill);
+            totalBill-=discount;
+            System.out.println("your Grand total is: " + grandtotal);
+            System.out.println("your discount is: " + discount);
+            System.out.println("your final total bill is: " + totalBill + "\n.....=*=*=*=*=*=*=*=Happy Shopping with HOW'S......=*=*=*=*=*=*");
         }
+  
+
+
 
 
     sc.close();
         }
 }
 
-Add main application code
+
 
 
         
