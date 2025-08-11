@@ -1,4 +1,73 @@
 import java.util.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Item {
+    private String name;
+    private float price;
+    private int quantity;
+
+    public Item(String name, float price, int quantity) { 
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    
+    public String getName() { 
+        return name; 
+    }
+    public float getPrice() { 
+        return price; 
+    }
+    public int getQuantity() {
+         return quantity; 
+    }
+}
+
+public class Inventory {
+    private List<Item> itemList;
+
+    public Inventory() {
+        itemList = new ArrayList<>();
+
+        itemList.add(new Item("Apple", 150.0f, 50));
+        itemList.add(new Item("Banana", 60.0f, 100));
+        itemList.add(new Item("Mango", 200.0f, 40));
+        itemList.add(new Item("Milk", 180.0f, 30));
+        itemList.add(new Item("Bread", 120.0f, 25));
+        itemList.add(new Item("Eggs (Dozen)", 250.0f, 20));
+        itemList.add(new Item("Rice (1kg)", 300.0f, 15));
+        itemList.add(new Item("Sugar (1kg)", 180.0f, 20));
+        itemList.add(new Item("Flour (1kg)", 160.0f, 25));
+        itemList.add(new Item("Tea Pack", 500.0f, 10));
+        itemList.add(new Item("Coffee Jar", 800.0f, 8));
+        itemList.add(new Item("Salt (1kg)", 50.0f, 30));
+        itemList.add(new Item("Cooking Oil (1L)", 550.0f, 12));
+        itemList.add(new Item("Butter", 400.0f, 10));
+        itemList.add(new Item("Cheese", 500.0f, 8));
+        itemList.add(new Item("Chicken (1kg)", 700.0f, 15));
+        itemList.add(new Item("Beef (1kg)", 900.0f, 10));
+        itemList.add(new Item("Fish (1kg)", 1200.0f, 6));
+        itemList.add(new Item("Onion (1kg)", 100.0f, 20));
+        itemList.add(new Item("Potato (1kg)", 80.0f, 25));
+        itemList.add(new Item("Tomato (1kg)", 120.0f, 18));
+        itemList.add(new Item("Carrot (1kg)", 140.0f, 15));
+        itemList.add(new Item("Cucumber (1kg)", 130.0f, 12));
+        itemList.add(new Item("Soft Drink", 120.0f, 20));
+        itemList.add(new Item("Chips Pack", 60.0f, 30));
+    }
+
+    public void addItem(Item item) {
+        itemList.add(item);
+    }
+
+    public List<Item> getItems() {
+        return itemList;
+    }
+}
+
 public class GrocreyShop{
     public static boolean availabilityCheck(String arr[] , String s){  //checking availability of ite in stock
         for (int i = 0 ; i< arr.length ; i++){
@@ -37,18 +106,6 @@ public static float totalDiscount(float totalBill) {          //calculating disc
     return discount;
 }
 
-public static void showStock(String[] items, float[] price, int[] quantity) {       
-    System.out.println("=*=*=*=*=*=*=*=*=~~~~~~~~~~.....HERE'S HOW'S ITEM LIST.....~~~~~~~~~~~~~*=*=*=*=*=*=*=*=*=*=");
-    System.out.println("The list of items in our store is given below:\n");
-
-    System.out.printf("%-5s %-15s %-10s %-10s\n", "No.", "Item", "Price", "Stock");
-
-    
-    for (int i = 0; i < items.length; i++) {
-        System.out.printf("%-5d %-15s %-10.2f %-10d\n", (i + 1), items[i], price[i], quantity[i]);
-    }
-
-    System.out.println("=*=*=*=*=*=*=*=*.........Now shop as you wish with HOW'S........=*=*=*=*=*=*=*=*=*=*");
 }
 
 
@@ -57,21 +114,6 @@ public static void showStock(String[] items, float[] price, int[] quantity) {
    
     public static void main(String[]args){
         Scanner sc = new Scanner(System.in);
-        String items[] = new String[]{"sugar"    , "tea"    , "rice"        , "flour"    , 
-                                      "pulses"   , "salt"   , "masalas"     , "milk"     ,
-                                       "yougert" , "juices" ,  "dry fruits" , "biscuits" , 
-                                       "snacks"  , "bread"  , "chocolates"  , "sweets" } ;
-
-        float price[] = new float[]{500f , 1500f , 400f  , 100f  ,
-                                    500f , 50f   , 500f  , 250f  , 
-                                    200f , 300f  , 3000f , 250f  , 
-                                    1000f , 200f , 1500f , 1200f};
-
-        int quantity[] = new int[]{100 , 60  , 200 , 500  ,
-                                   300 , 10  , 200 , 50   ,
-                                    40 , 100 , 200 , 250  , 
-                                   300 , 500 , 400 , 100} ;
-
         float totalBill = 0f;
         int idx  , myQuantity;
         float discount = 0f;
@@ -119,8 +161,20 @@ public static void showStock(String[] items, float[] price, int[] quantity) {
                 }
             }
         }
-            else if (choice.equalsIgnoreCase("list")){
-            showStock(items  , price , quantity);
+            else if (choice.equalsIgnoreCase("list")){    
+                System.out.println("=*=*=*=*=*=*=*=*=~~~~~~~~~~.....HERE'S HOW'S ITEM LIST.....~~~~~~~~~~~~~*=*=*=*=*=*=*=*=*=*=");
+                 System.out.println("The list of items in our store is given below:\n");
+
+                System.out.printf("%-5s %-15s %-10s %-10s\n", "No.", "Item", "Price", "Stock");
+
+                int i = 0;
+                for (Item item : inventory.getItems()) {
+                    
+                    System.out.printf("%-5d %-15s %-10.2f %-10d\n", (i++), item.getName(), item.getPrice(), item.getQuantity());
+    }
+
+    System.out.println("=*=*=*=*=*=*=*=*.........Now shop as you wish with HOW'S........=*=*=*=*=*=*=*=*=*=*");
+
             }
         
             else if(choice.equalsIgnoreCase("exit")){
