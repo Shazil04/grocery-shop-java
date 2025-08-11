@@ -1,35 +1,33 @@
 import java.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class Item {
+public class Item {              //class item
     private String name;
     private float price;
     private int quantity;
 
-    public Item(String name, float price, int quantity) { 
+    public Item(String name, float price, int quantity) {     //constructor
         this.name = name;
         this.price = price;
         this.quantity = quantity;
     }
 
     
-    public String getName() { 
+    public String getName() {                              //name getter
         return name; 
     }
-    public float getPrice() { 
+    public float getPrice() {                            //price getter
         return price; 
     }
-    public int getQuantity() {
+    public int getQuantity() {                          //quantity getter
          return quantity; 
     }
 }
 
-public class Inventory {
+public class Inventory {                               //class inventory
     private List<Item> itemList;
 
-    public Inventory() {
+    public Inventory() {                             //constructor
         itemList = new ArrayList<>();
 
         itemList.add(new Item("Apple", 150.0f, 50));
@@ -59,16 +57,16 @@ public class Inventory {
         itemList.add(new Item("Chips Pack", 60.0f, 30));
     }
 
-    public void addItem(Item item) {
+    public void addItem(Item item) {               //add item method
         itemList.add(item);
     }
 
-    public List<Item> getItems() {
+    public List<Item> getItems() {                //get item method
         return itemList;
     }
 }
 
-public class GrocreyShop{
+public class GrocreyShop{                    // main class 
 
     static Inventory inventory = new Inventory();
     public static boolean availabilityCheck(String s){  //checking availability of ite in stock
