@@ -69,9 +69,11 @@ public class Inventory {
 }
 
 public class GrocreyShop{
-    public static boolean availabilityCheck(String arr[] , String s){  //checking availability of ite in stock
-        for (int i = 0 ; i< arr.length ; i++){
-            if (arr[i].equalsIgnoreCase(s)){
+
+    static Inventory inventory = new Inventory();
+    public static boolean availabilityCheck(String s){  //checking availability of ite in stock
+        for (Item item : inventory.getItems()){
+            if (item.getName().equalsIgnoreCase(s)){
                 return true;
             }
             
@@ -106,14 +108,28 @@ public static float totalDiscount(float totalBill) {          //calculating disc
     return discount;
 }
 
-}
+public static void DisplayListofItem(){
+    System.out.println("=*=*=*=*=*=*=*=*=~~~~~~~~~~.....HERE'S HOW'S ITEM LIST.....~~~~~~~~~~~~~*=*=*=*=*=*=*=*=*=*=");
+                 System.out.println("The list of items in our store is given below:\n");
 
+                System.out.printf("%-5s %-15s %-10s %-10s\n", "No.", "Item", "Price", "Stock");
+
+                int i = 1;
+                for (Item item : inventory.getItems()) {
+                    
+                    System.out.printf("%-5d %-15s %-10.2f %-10d\n", (i++), item.getName(), item.getPrice(), item.getQuantity());
+    }
+
+    System.out.println("=*=*=*=*=*=*=*=*.........Now shop as you wish with HOW'S........=*=*=*=*=*=*=*=*=*=*");
+}
+}
 
 
 
    
     public static void main(String[]args){
         Scanner sc = new Scanner(System.in);
+        Inventory inventory = new Inventory();
         float totalBill = 0f;
         int idx  , myQuantity;
         float discount = 0f;
@@ -161,21 +177,10 @@ public static float totalDiscount(float totalBill) {          //calculating disc
                 }
             }
         }
-            else if (choice.equalsIgnoreCase("list")){    
-                System.out.println("=*=*=*=*=*=*=*=*=~~~~~~~~~~.....HERE'S HOW'S ITEM LIST.....~~~~~~~~~~~~~*=*=*=*=*=*=*=*=*=*=");
-                 System.out.println("The list of items in our store is given below:\n");
-
-                System.out.printf("%-5s %-15s %-10s %-10s\n", "No.", "Item", "Price", "Stock");
-
-                int i = 0;
-                for (Item item : inventory.getItems()) {
-                    
-                    System.out.printf("%-5d %-15s %-10.2f %-10d\n", (i++), item.getName(), item.getPrice(), item.getQuantity());
-    }
-
-    System.out.println("=*=*=*=*=*=*=*=*.........Now shop as you wish with HOW'S........=*=*=*=*=*=*=*=*=*=*");
-
-            }
+            else if (choice.equalsIgnoreCase("list")){ 
+                DisplayListofItem()
+            }   
+                
         
             else if(choice.equalsIgnoreCase("exit")){
                 System.out.println("=*=*=*=*=*=*=*=*=*=*.......THANKS FOR visiting HOW'S!!......*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
