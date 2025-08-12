@@ -1,7 +1,7 @@
 import java.util.*;
 
 
-public class Item {              //class item
+class Item {              //class item
     private String name;
     private float price;
     private int quantity;
@@ -24,7 +24,7 @@ public class Item {              //class item
     }
 }
 
-public class Inventory {                               //class inventory
+class Inventory {                               //class inventory
     private List<Item> itemList;
 
     public Inventory() {                             //constructor
@@ -61,14 +61,83 @@ public class Inventory {                               //class inventory
         itemList.add(item);
     }
 
-    public List<Item> getItems() {                //get item method
+    public List<Item> getItems() {                //get whole items item method
         return itemList;
     }
+    public Item getItemByName(String name){      //get ingle item from whole list
+        for (Item item : itemList){
+            if(item.getName().equalsIgnoreCase(name)){
+                return item;
+            }
+        }
+        return null;                          //not found;
+    }
 }
+
+
+
+
+class CartItem{              //class Cart item
+    private String name;
+    private float price;
+    private int quantity;
+
+    public CartItem(String name, float price, int quantity) {     //constructor
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    
+    public String getName() {                              //name getter
+        return name; 
+    }
+    public float getPrice() {                            //price getter
+        return price; 
+    }
+    public int getQuantity() {                          //quantity getter
+         return quantity; 
+    }
+
+
+    public void setName(String name) {                              //name setter
+        this.name =  name; 
+    }
+    public void settPrice(float price) {                            //price setter
+        this.price = price; 
+    }
+    public void setQuantity(int quantity) {                          //quantity setter
+        this.quantity = quantity;
+    }
+}
+
+class CartInventory {                               //class inventory
+    private List<CartItem> CartItemList;
+
+    public CartInventory() {                             //constructor
+        CartItemList = new ArrayList<>();
+
+
+    }
+
+    public void addItem(CartItem item) {               //add item method
+        CartItemList.add(item);
+    }
+
+    public List<CartItem> getItems() {                //get item method
+        return CartItemList;
+    }
+}
+
+
+
+
+
 
 public class GrocreyShop{                    // main class 
 
     static Inventory inventory = new Inventory();
+    static CartInventory Cartinventory = new CartInventory();
     public static boolean availabilityCheck(String s){  //checking availability of ite in stock
         for (Item item : inventory.getItems()){
             if (item.getName().equalsIgnoreCase(s)){
@@ -77,15 +146,6 @@ public class GrocreyShop{                    // main class
             
         }
         return false;
-    }
-
-    public static int findingIndex(String arr[] , String s){  //finding index of item
-        for (int i = 0 ; i< arr.length ; i++){
-            if (arr[i].equalsIgnoreCase(s)){
-                return  i;
-            }
-        }
-        return -1;
     }
 
 public static float totalDiscount(float totalBill) {          //calculating discouunt on grandtotal
@@ -108,19 +168,28 @@ public static float totalDiscount(float totalBill) {          //calculating disc
 
 public static void DisplayListofItem(){
     System.out.println("=*=*=*=*=*=*=*=*=~~~~~~~~~~.....HERE'S HOW'S ITEM LIST.....~~~~~~~~~~~~~*=*=*=*=*=*=*=*=*=*=");
-                 System.out.println("The list of items in our store is given below:\n");
+    System.out.println("The list of items in our store is given below:\n");
+    System.out.printf("%-5s %-15s %-10s %-10s\n", "No.", "Item", "Price", "Stock");
 
-                System.out.printf("%-5s %-15s %-10s %-10s\n", "No.", "Item", "Price", "Stock");
-
-                int i = 1;
-                for (Item item : inventory.getItems()) {
-                    
-                    System.out.printf("%-5d %-15s %-10.2f %-10d\n", (i++), item.getName(), item.getPrice(), item.getQuantity());
+    int i = 1;
+    for (Item item : inventory.getItems()) {
+        System.out.printf("%-5d %-15s %-10.2f %-10d\n", (i++), item.getName(), item.getPrice(), item.getQuantity());
     }
 
     System.out.println("=*=*=*=*=*=*=*=*.........Now shop as you wish with HOW'S........=*=*=*=*=*=*=*=*=*=*");
 }
+
+public static void DisplayListofCartItem(){
+    System.out.println("\n============= YOUR CART SUMMARY =============");
+    System.out.printf("%-15s %-10s %-10s %-10s\n", "Item", "Qty", "Price", "Total");
+
+        int i = 1;
+        for (CartItem item : Cartinventory.getItems()) {
+            System.out.printf("%-15s %-10d %-10.2f %-10.2f\n",(i++), item.getName(), item.getPrice(), item.getQuantity());
+    }
+    System.out.println("=============================================");
 }
+
 
 
 
@@ -129,13 +198,11 @@ public static void DisplayListofItem(){
         Scanner sc = new Scanner(System.in);
         Inventory inventory = new Inventory();
         float totalBill = 0f;
-        int idx  , myQuantity;
+        int myQuantity;
         float discount = 0f;
+        Item currentItem;
 
-        String cartItems[] = new String[100];
-        float cartPrices[] = new float[100];
-        int cartquantity[] = new int[100];
-        int cartIndex = 0;
+
 
         System.out.println("=*=*=*=*=*=*=*=*=*=*.......WELCOME TO HOW'S GROCERY STORE........*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
         System.out.println("=*=*=*=*=*=*=*=*=*=*.............WHERE CHOICE IS YOURS..........*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
@@ -143,64 +210,55 @@ public static void DisplayListofItem(){
             System.out.println("Enter\n" + "\"shop\" to start shopping \n"+ "\"List\" for list of items\n" + "\"exit\" to quit shopping: ");
             String choice = sc.nextLine();
 
-            if(choice.equalsIgnoreCase("shop")){
+
+
+            if(choice.equalsIgnoreCase("shop")){                        //if select shop then 
                 while(true){
                 System.out.println("Enter item you want to buy OR type \"complete\" to stop shopping" );
                 String myItem = sc.nextLine();
                 if (myItem.equalsIgnoreCase("complete")) {
                     break; 
                 }
-               if(availabilityCheck(items , myItem)){
+               if(availabilityCheck(myItem)){                                          //checking availability
+                    currentItem = inventory.getItemByName(myItem);
+                    if(currentItem != null){                                           //double check
                     System.out.print("Enter the quantity of " + myItem + " in numbers:  " );
                     myQuantity = sc.nextInt();
                     sc.nextLine();
-                    idx = findingIndex(items , myItem);
-                    cartItems[cartIndex] = myItem;
-                    cartquantity[cartIndex] = myQuantity;
-                    cartPrices[cartIndex] = price[idx];
-                    cartIndex++;
+                        if(myQuantity <= currentItem.getQuantity()){                    //checking quantity avaialble
+                            Cartinventory.addItem(new CartItem(myItem ,currentItem.getPrice(), myQuantity));
+                        }
+                        else{
+                    System.out.println("Oops!! we have run short of quantiy of the "+ myItem + ": ");
+                    continue;
+                        }
+                
+
+                    }
+            
                 }
-                else{
+                else{                                                                       //if item is not available
                     System.out.println("We are very sorry , Item is out of stock");
                     continue;
                 }
-                if(myQuantity<=quantity[idx]){
-                    System.out.println("We have enough quantiy of the "+ myItem + ": ");
-                    totalBill+= price[idx]*myQuantity;
-                    quantity[idx]-=myQuantity;
-                }
-                else{
-                    System.out.println("Oops!! we have run short of quantiy of the "+ myItem + ": ");
-                    continue;
-                }
             }
-        }
+        }                                                                                   //if select list of items then
             else if (choice.equalsIgnoreCase("list")){ 
-                DisplayListofItem()
+                DisplayListofItem();
             }   
                 
         
-            else if(choice.equalsIgnoreCase("exit")){
+            else if(choice.equalsIgnoreCase("exit")){                          //if select exit then
                 System.out.println("=*=*=*=*=*=*=*=*=*=*.......THANKS FOR visiting HOW'S!!......*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
                 break;
 
             }
-            else{
+            else{                                                                             //invalid choice selected 
                 System.out.println("Invalid Choice! please try again with correct choice!");
             }
         }
-            if (cartIndex > 0) {
-                System.out.println("\n============= YOUR CART SUMMARY =============");
-                System.out.printf("%-15s %-10s %-10s %-10s\n", "Item", "Qty", "Price", "Total");
-
-            for (int i = 0; i < cartIndex; i++) {
-                float itemTotal = cartquantity[i] * cartPrices[i];
-                System.out.printf("%-15s %-10d %-10.2f %-10.2f\n",
-                          cartItems[i], cartquantity[i], cartPrices[i], itemTotal);
-    }
-            System.out.println("=============================================");
-}
         if (totalBill>0){
+            DisplayListofCartItem();
             float grandtotal = totalBill;
             discount = totalDiscount(totalBill);
             totalBill-=discount;
