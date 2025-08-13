@@ -1,60 +1,92 @@
 import java.util.*;
 
 
-class Item {              //class item
+class Item {                                                   //class item
     private String name;
     private float price;
-    private int quantity;
+    private int quantity;e
 
-    public Item(String name, float price, int quantity) {     //constructor
+    public Item(String name, float price, int quantity) {      //constructor
         this.name = name;
         this.price = price;
         this.quantity = quantity;
     }
+    public Item(){
+
+    }
 
     
-    public String getName() {                              //name getter
+    public String getName() {                                 //name getter
         return name; 
     }
-    public float getPrice() {                            //price getter
+    public float getPrice() {                                 //price getter
         return price; 
     }
-    public int getQuantity() {                          //quantity getter
+    public int getQuantity() {                                 //quantity getter
          return quantity; 
+    }
+
+    public void setQuantity(int quantity) {                    //quantity setter
+         this.quantity = quantity; 
     }
 }
 
-class Inventory {                               //class inventory
+class Inventory {                                    //class inventory
     private List<Item> itemList;
 
     public Inventory() {                             //constructor
         itemList = new ArrayList<>();
+ itemList.add(new Item("Apple", 150.0f, 50));
+itemList.add(new Item("Banana", 60.0f, 100));
+itemList.add(new Item("Mango", 200.0f, 40));
+itemList.add(new Item("Milk", 180.0f, 30));
+itemList.add(new Item("Bread", 120.0f, 25));
+itemList.add(new Item("Eggs", 250.0f, 20));
+itemList.add(new Item("Rice", 300.0f, 15));
+itemList.add(new Item("Sugar", 180.0f, 20));
+itemList.add(new Item("Flour", 160.0f, 25));
+itemList.add(new Item("Tea", 500.0f, 10));
+itemList.add(new Item("Coffee", 800.0f, 8));
+itemList.add(new Item("Salt", 50.0f, 30));
+itemList.add(new Item("Cooking Oil", 550.0f, 12));
+itemList.add(new Item("Butter", 400.0f, 10));
+itemList.add(new Item("Cheese", 500.0f, 8));
+itemList.add(new Item("Chicken", 700.0f, 15));
+itemList.add(new Item("Beef", 900.0f, 10));
+itemList.add(new Item("Fish", 1200.0f, 6));
+itemList.add(new Item("Onion", 100.0f, 20));
+itemList.add(new Item("Potato", 80.0f, 25));
+itemList.add(new Item("Tomato", 120.0f, 18));
+itemList.add(new Item("Carrot", 140.0f, 15));
+itemList.add(new Item("Cucumber", 130.0f, 12));
+itemList.add(new Item("Soft Drink", 120.0f, 20));
+itemList.add(new Item("Chips", 60.0f, 30));
+itemList.add(new Item("Biscuits", 90.0f, 40));
+itemList.add(new Item("Chocolate", 150.0f, 25));
+itemList.add(new Item("Jam", 250.0f, 15));
+itemList.add(new Item("Honey", 600.0f, 10));
+itemList.add(new Item("Pasta", 200.0f, 18));
+itemList.add(new Item("Noodles", 70.0f, 35));
+itemList.add(new Item("Ketchup", 180.0f, 20));
+itemList.add(new Item("Mayonnaise", 250.0f, 15));
+itemList.add(new Item("Pickles", 220.0f, 12));
+itemList.add(new Item("Dry Fruits", 1500.0f, 5));
+itemList.add(new Item("Lentils", 300.0f, 25));
+itemList.add(new Item("Spices Mix", 100.0f, 20));
+itemList.add(new Item("Shampoo", 350.0f, 10));
+itemList.add(new Item("Soap", 80.0f, 40));
+itemList.add(new Item("Toothpaste", 200.0f, 20));
+itemList.add(new Item("Tissue Box", 150.0f, 18));
+itemList.add(new Item("Face Wash", 400.0f, 10));
+itemList.add(new Item("Detergent Powder", 600.0f, 8));
+itemList.add(new Item("Bleach", 250.0f, 6));
+itemList.add(new Item("Hand Sanitizer", 300.0f, 12));
+itemList.add(new Item("Mosquito Spray", 500.0f, 5));
+itemList.add(new Item("Ice Cream", 350.0f, 15));
+itemList.add(new Item("Yogurt", 180.0f, 12));
 
-        itemList.add(new Item("Apple", 150.0f, 50));
-        itemList.add(new Item("Banana", 60.0f, 100));
-        itemList.add(new Item("Mango", 200.0f, 40));
-        itemList.add(new Item("Milk", 180.0f, 30));
-        itemList.add(new Item("Bread", 120.0f, 25));
-        itemList.add(new Item("Eggs (Dozen)", 250.0f, 20));
-        itemList.add(new Item("Rice (1kg)", 300.0f, 15));
-        itemList.add(new Item("Sugar (1kg)", 180.0f, 20));
-        itemList.add(new Item("Flour (1kg)", 160.0f, 25));
-        itemList.add(new Item("Tea Pack", 500.0f, 10));
-        itemList.add(new Item("Coffee Jar", 800.0f, 8));
-        itemList.add(new Item("Salt (1kg)", 50.0f, 30));
-        itemList.add(new Item("Cooking Oil (1L)", 550.0f, 12));
-        itemList.add(new Item("Butter", 400.0f, 10));
-        itemList.add(new Item("Cheese", 500.0f, 8));
-        itemList.add(new Item("Chicken (1kg)", 700.0f, 15));
-        itemList.add(new Item("Beef (1kg)", 900.0f, 10));
-        itemList.add(new Item("Fish (1kg)", 1200.0f, 6));
-        itemList.add(new Item("Onion (1kg)", 100.0f, 20));
-        itemList.add(new Item("Potato (1kg)", 80.0f, 25));
-        itemList.add(new Item("Tomato (1kg)", 120.0f, 18));
-        itemList.add(new Item("Carrot (1kg)", 140.0f, 15));
-        itemList.add(new Item("Cucumber (1kg)", 130.0f, 12));
-        itemList.add(new Item("Soft Drink", 120.0f, 20));
-        itemList.add(new Item("Chips Pack", 60.0f, 30));
+       
+
     }
 
     public void addItem(Item item) {               //add item method
@@ -64,13 +96,13 @@ class Inventory {                               //class inventory
     public List<Item> getItems() {                //get whole items item method
         return itemList;
     }
-    public Item getItemByName(String name){      //get ingle item from whole list
+    public  Item getItemByName(String name){      //get ingle item from whole list
         for (Item item : itemList){
             if(item.getName().equalsIgnoreCase(name)){
                 return item;
             }
         }
-        return null;                          //not found;
+        return null;                              //If not found;
     }
 }
 
@@ -89,7 +121,7 @@ class CartItem{              //class Cart item
     }
 
     
-    public String getName() {                              //name getter
+    public String getName() {                            //name getter
         return name; 
     }
     public float getPrice() {                            //price getter
@@ -100,21 +132,21 @@ class CartItem{              //class Cart item
     }
 
 
-    public void setName(String name) {                              //name setter
+    public void setName(String name) {                  //name setter
         this.name =  name; 
     }
-    public void settPrice(float price) {                            //price setter
+    public void settPrice(float price) {                //price setter
         this.price = price; 
     }
-    public void setQuantity(int quantity) {                          //quantity setter
+    public void setQuantity(int quantity) {            //quantity setter
         this.quantity = quantity;
     }
 }
 
-class CartInventory {                               //class inventory
+class CartInventory {                                   //class inventory
     private List<CartItem> CartItemList;
 
-    public CartInventory() {                             //constructor
+    public CartInventory() {                           //constructor
         CartItemList = new ArrayList<>();
 
 
@@ -124,7 +156,7 @@ class CartInventory {                               //class inventory
         CartItemList.add(item);
     }
 
-    public List<CartItem> getItems() {                //get item method
+    public List<CartItem> getCartItems() {              //get item method
         return CartItemList;
     }
 }
@@ -179,13 +211,14 @@ public static void DisplayListofItem(){
     System.out.println("=*=*=*=*=*=*=*=*.........Now shop as you wish with HOW'S........=*=*=*=*=*=*=*=*=*=*");
 }
 
-public static void DisplayListofCartItem(){
+public static void DisplayListofCartItem() {
     System.out.println("\n============= YOUR CART SUMMARY =============");
-    System.out.printf("%-15s %-10s %-10s %-10s\n", "Item", "Qty", "Price", "Total");
+    System.out.printf("%-5s %-15s %-10s %-10s %-10s\n", "No.", "Item", "Qty", "Price", "Total");
 
-        int i = 1;
-        for (CartItem item : Cartinventory.getItems()) {
-            System.out.printf("%-15s %-10d %-10.2f %-10.2f\n",(i++), item.getName(), item.getPrice(), item.getQuantity());
+    int i = 1;
+    for (CartItem item : Cartinventory.getCartItems()) { 
+        System.out.printf("%-5d %-15s %-10d %-10.2f %-10.2f\n",i++, item.getName(),  item.getQuantity(), item.getPrice(), item.getPrice() * item.getQuantity()
+        );
     }
     System.out.println("=============================================");
 }
@@ -193,14 +226,14 @@ public static void DisplayListofCartItem(){
 
 
 
+
    
     public static void main(String[]args){
         Scanner sc = new Scanner(System.in);
-        Inventory inventory = new Inventory();
         float totalBill = 0f;
         int myQuantity;
         float discount = 0f;
-        Item currentItem;
+        Item currentItem = new Item();
 
 
 
@@ -227,6 +260,8 @@ public static void DisplayListofCartItem(){
                     sc.nextLine();
                         if(myQuantity <= currentItem.getQuantity()){                    //checking quantity avaialble
                             Cartinventory.addItem(new CartItem(myItem ,currentItem.getPrice(), myQuantity));
+                            totalBill += currentItem.getPrice() * myQuantity;
+                            currentItem.setQuantity(currentItem.getQuantity()-myQuantity);
                         }
                         else{
                     System.out.println("Oops!! we have run short of quantiy of the "+ myItem + ": ");
