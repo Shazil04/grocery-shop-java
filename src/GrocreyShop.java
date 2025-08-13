@@ -4,7 +4,7 @@ import java.util.*;
 class Item {                                                   //class item
     private String name;
     private float price;
-    private int quantity;e
+    private int quantity;
 
     public Item(String name, float price, int quantity) {      //constructor
         this.name = name;
@@ -135,7 +135,7 @@ class CartItem{              //class Cart item
     public void setName(String name) {                  //name setter
         this.name =  name; 
     }
-    public void settPrice(float price) {                //price setter
+    public void setPrice(float price) {                //price setter
         this.price = price; 
     }
     public void setQuantity(int quantity) {            //quantity setter
@@ -159,6 +159,11 @@ class CartInventory {                                   //class inventory
     public List<CartItem> getCartItems() {              //get item method
         return CartItemList;
     }
+    public boolean isCartEmpty() {
+        return CartItemList.isEmpty();
+    }
+
+
 }
 
 
@@ -166,19 +171,16 @@ class CartInventory {                                   //class inventory
 
 
 
-public class GrocreyShop{                    // main class 
+public class GrocreyShop{                                       // main class 
 
     static Inventory inventory = new Inventory();
     static CartInventory Cartinventory = new CartInventory();
-    public static boolean availabilityCheck(String s){  //checking availability of ite in stock
-        for (Item item : inventory.getItems()){
-            if (item.getName().equalsIgnoreCase(s)){
-                return true;
-            }
-            
-        }
-        return false;
+
+
+    public static boolean availabilityCheck(String s) {               //checking availability of item selected
+        return inventory.getItemByName(s) != null;
     }
+
 
 public static float totalDiscount(float totalBill) {          //calculating discouunt on grandtotal
     float discount = 0f;
@@ -240,7 +242,7 @@ public static void DisplayListofCartItem() {
         System.out.println("=*=*=*=*=*=*=*=*=*=*.......WELCOME TO HOW'S GROCERY STORE........*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
         System.out.println("=*=*=*=*=*=*=*=*=*=*.............WHERE CHOICE IS YOURS..........*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
         while(true){
-            System.out.println("Enter\n" + "\"shop\" to start shopping \n"+ "\"List\" for list of items\n" + "\"exit\" to quit shopping: ");
+            System.out.println("Enter\n" + "\"shop\" to start shopping \n"+ "\"List\" for list of items\n" + "\"Cart\" to show your cart\n" +  "\"exit\" to quit shopping: ");
             String choice = sc.nextLine();
 
 
@@ -253,12 +255,11 @@ public static void DisplayListofCartItem() {
                     break; 
                 }
                if(availabilityCheck(myItem)){                                          //checking availability
-                    currentItem = inventory.getItemByName(myItem);
-                    if(currentItem != null){                                           //double check
+                    currentItem = inventory.getItemByName(myItem);                                         
                     System.out.print("Enter the quantity of " + myItem + " in numbers:  " );
                     myQuantity = sc.nextInt();
                     sc.nextLine();
-                        if(myQuantity <= currentItem.getQuantity()){                    //checking quantity avaialble
+                        if(myQuantity <= 0){                    //checking quantity avaialble
                             Cartinventory.addItem(new CartItem(myItem ,currentItem.getPrice(), myQuantity));
                             totalBill += currentItem.getPrice() * myQuantity;
                             currentItem.setQuantity(currentItem.getQuantity()-myQuantity);
@@ -269,7 +270,7 @@ public static void DisplayListofCartItem() {
                         }
                 
 
-                    }
+                    
             
                 }
                 else{                                                                       //if item is not available
@@ -280,7 +281,19 @@ public static void DisplayListofCartItem() {
         }                                                                                   //if select list of items then
             else if (choice.equalsIgnoreCase("list")){ 
                 DisplayListofItem();
-            }   
+            } 
+            else if(choice.equalsIgnoreCase("Cart")){
+                if (Cartinventory.isCartEmpty()) {
+                    System.out.println("Your cart is empty."+ "\n"+ "\n"+ "\n");
+                }
+                else{
+                    DisplayListofCartItem();
+                }
+
+
+                
+
+            }
                 
         
             else if(choice.equalsIgnoreCase("exit")){                          //if select exit then
