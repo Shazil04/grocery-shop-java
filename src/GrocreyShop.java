@@ -163,6 +163,19 @@ class CartInventory {                                   //class inventory
         return CartItemList.isEmpty();
     }
 
+     public void removeItem(int index) {               //remove item method
+        CartItemList.remove(index);
+    }
+
+    public CartItem getItemByIndex(int index) {           //get item by index
+    if (index >= 0 && index < CartItemList.size()) {
+        return CartItemList.get(index);
+    }
+    return null;
+}
+
+
+
 
 }
 
@@ -177,12 +190,12 @@ public class GrocreyShop{                                       // main class
     static CartInventory Cartinventory = new CartInventory();
 
 
-    public static boolean availabilityCheck(String s) {               //checking availability of item selected
+    public static boolean availabilityCheck(String s){               //checking availability of item selected
         return inventory.getItemByName(s) != null;
     }
 
 
-public static float totalDiscount(float totalBill) {          //calculating discouunt on grandtotal
+public static float totalDiscount(float totalBill){          //calculating discouunt on grandtotal
     float discount = 0f;
 
     if (totalBill <= 1000) {
@@ -215,6 +228,11 @@ public static void DisplayListofItem(){
 
 public static void DisplayListofCartItem() {
     System.out.println("\n============= YOUR CART SUMMARY =============");
+     if (Cartinventory.isCartEmpty()) {
+        System.out.println("Your cart is empty."+ "\n"+ "\n"+ "\n");
+        return;                                                           // stop here
+    }
+    else{
     System.out.printf("%-5s %-15s %-10s %-10s %-10s\n", "No.", "Item", "Qty", "Price", "Total");
 
     int i = 1;
@@ -223,6 +241,7 @@ public static void DisplayListofCartItem() {
         );
     }
     System.out.println("=============================================");
+}
 }
 
 
@@ -242,8 +261,9 @@ public static void DisplayListofCartItem() {
         System.out.println("=*=*=*=*=*=*=*=*=*=*.......WELCOME TO HOW'S GROCERY STORE........*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
         System.out.println("=*=*=*=*=*=*=*=*=*=*.............WHERE CHOICE IS YOURS..........*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
         while(true){
-            System.out.println("Enter\n" + "\"shop\" to start shopping \n"+ "\"List\" for list of items\n" + "\"Cart\" to show your cart\n" +  "\"exit\" to quit shopping: ");
+            System.out.println("Enter:\n" + "\"shop\" to start shopping \n"+ "\"List\" for list of items\n" + "\"Cart\" to show your cart\n" +  "\"exit\" to quit shopping: ");
             String choice = sc.nextLine();
+     
 
 
 
@@ -259,7 +279,7 @@ public static void DisplayListofCartItem() {
                     System.out.print("Enter the quantity of " + myItem + " in numbers:  " );
                     myQuantity = sc.nextInt();
                     sc.nextLine();
-                        if(myQuantity <= 0){                    //checking quantity avaialble
+                        if(myQuantity >= 0){                    //checking quantity avaialble
                             Cartinventory.addItem(new CartItem(myItem ,currentItem.getPrice(), myQuantity));
                             totalBill += currentItem.getPrice() * myQuantity;
                             currentItem.setQuantity(currentItem.getQuantity()-myQuantity);
@@ -288,12 +308,38 @@ public static void DisplayListofCartItem() {
                 }
                 else{
                     DisplayListofCartItem();
+                    while(true){
+                    System.out.println("\n"+ "\n"+ "\n" + "Enter:\n" + "\"Remove\" to remove item from cart \n"+ "\"Back\" to start shopping again \n");
+                    String secondChoice = sc.nextLine();
+                    if(secondChoice.equalsIgnoreCase("remove")){
+                        System.out.print("Enter the serial number of the item to remove: ");
+                        int removeIndex = sc.nextInt()-1;
+                        sc.nextLine();
+                        if(removeIndex >= 0 && removeIndex < Cartinventory.getCartItems().size()){
+                            CartItem selectedItem = Cartinventory.getItemByIndex(removeIndex);
+                            if(selectedItem != null){
+                            totalBill -= selectedItem.getPrice() *  selectedItem.getQuantity();
+                            Cartinventory.removeItem(removeIndex);
+                            System.out.println( selectedItem.getName() + " is removed successfully!");
+                            }
+                            else{
+                                System.out.println("Invalid index selected , try again!");
+                            }
+                        }
+                        else{
+                        System.out.println("Invalid serial number!");
+                        }
+                    }
+                    else if(secondChoice.equalsIgnoreCase("back")){
+                        break;
+                    }
+                    else{
+                        System.out.println("Invalid choice. Try again.");
+                    }
                 }
-
-
                 
-
             }
+        }
                 
         
             else if(choice.equalsIgnoreCase("exit")){                          //if select exit then
