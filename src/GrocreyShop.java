@@ -1,4 +1,61 @@
 import java.util.*;
+import java.io.*;
+    //User class for user managment
+class User {
+    private String username;
+    private String password;
+    private String role;
+
+    // Constructor
+    public User(String username, String password, String role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
+    // Setters
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    // Getters
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+}
+
+
+
+
+class UserManager{
+    private List<User> users;
+    private File file;
+
+    public void signUp(){
+
+    }
+    public void logIn(){
+
+    }
+    
+
+}
 
 
 class Item {                                                   //class item
@@ -265,6 +322,28 @@ public static void DisplayListofCartItem() {
 
         System.out.println("=*=*=*=*=*=*=*=*=*=*.......WELCOME TO HOW'S GROCERY STORE........*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
         System.out.println("=*=*=*=*=*=*=*=*=*=*.............WHERE CHOICE IS YOURS..........*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
+        System.out.println("Are you "+ "\n" + "An ADMIN" + " \n"+ "A USER" + "\n");
+        String userSelection = sc.nextLine();
+        String role;
+        if(userSelection.equalsIgnoreCase("user")){
+            System.out.println("\nEnter:\n" + "\"Log in \" if account already exists\n"+ "\"Sign up\" to create new account\n");
+            role = sc.nextLine();
+            if(role.equalsIgnoreCase("log in")){
+
+            }
+            else if(role.equalsIgnoreCase("sign up")){
+
+            }
+            else{
+                System.out.println("Invalid Choice, try again");
+            }
+        else if (userSelection.equalsIgnoreCase("admin")){
+
+        }
+        else{
+            System.out.println("Invalid choice, please select a valid choice");
+            userSelection = sc.nextLine();
+        }
         while(true){
             System.out.println("Enter:\n" + "\"shop\" to start shopping \n"+ "\"List\" for list of items\n" + "\"Cart\" to show your cart\n" +  "\"exit\" to quit shopping: ");
             String choice = sc.nextLine();
@@ -326,7 +405,7 @@ public static void DisplayListofCartItem() {
                         System.out.println("your Grand total is: " + grandtotal);
                         System.out.println("your discount is: " + discount);
                         System.out.println("your final total bill is: " + totalBill + "\n.....=*=*=*=*=*=*=*=Happy Shopping with HOW'S......=*=*=*=*=*=*");
-                        System.out.println( "/n" + "/n "+ "/n"+ "Do you want to confirm checkout? (yes/no)");
+                        System.out.println( "\n" + "\n "+ "\n"+ "Do you want to confirm checkout? (yes/no)");
                         String confirmation = sc.nextLine();
                         if(confirmation.equalsIgnoreCase("yes")){
                             System.out.println( "Thank you for shopping!");
