@@ -172,7 +172,11 @@ class CartInventory {                                   //class inventory
         return CartItemList.get(index);
     }
     return null;
-}
+    }
+
+    public void clearList(){
+        CartItemList.clear();
+    }
 
 
 
@@ -252,8 +256,9 @@ public static void DisplayListofCartItem() {
     public static void main(String[]args){
         Scanner sc = new Scanner(System.in);
         float totalBill = 0f;
-        int myQuantity;
+        int myQuantity = 0;
         float discount = 0f;
+        float grandtotal = 0f;
         Item currentItem = new Item();
 
 
@@ -302,6 +307,8 @@ public static void DisplayListofCartItem() {
             else if (choice.equalsIgnoreCase("list")){ 
                 DisplayListofItem();
             } 
+
+
             else if(choice.equalsIgnoreCase("Cart")){
                 if (Cartinventory.isCartEmpty()) {
                     System.out.println("Your cart is empty."+ "\n"+ "\n"+ "\n");
@@ -309,9 +316,34 @@ public static void DisplayListofCartItem() {
                 else{
                     DisplayListofCartItem();
                     while(true){
-                    System.out.println("\n"+ "\n"+ "\n" + "Enter:\n" + "\"Remove\" to remove item from cart \n"+ "\"Back\" to start shopping again \n");
+                    System.out.println("\n"+ "\n"+ "\n" + "Enter:\n" + "\"Checkout\" for checkout \n" + "\"Remove\" to remove item from cart \n"+ "\"Back\" to start shopping again \n");
                     String secondChoice = sc.nextLine();
-                    if(secondChoice.equalsIgnoreCase("remove")){
+                    if(secondChoice.equalsIgnoreCase("checkout")){
+                         DisplayListofCartItem();
+                        grandtotal = totalBill;
+                        discount = totalDiscount(totalBill);
+                        totalBill-=discount;
+                        System.out.println("your Grand total is: " + grandtotal);
+                        System.out.println("your discount is: " + discount);
+                        System.out.println("your final total bill is: " + totalBill + "\n.....=*=*=*=*=*=*=*=Happy Shopping with HOW'S......=*=*=*=*=*=*");
+                        System.out.println( "/n" + "/n "+ "/n"+ "Do you want to confirm checkout? (yes/no)");
+                        String confirmation = sc.nextLine();
+                        if(confirmation.equalsIgnoreCase("yes")){
+                            System.out.println( "Thank you for shopping!");
+                            Cartinventory.clearList();
+                            totalBill = 0;
+                            break;
+
+                        } 
+                        else{
+                            System.out.println( "Checkout cancelled. You can continue shopping.");
+                            continue;
+                        }
+                        
+       
+
+                    }
+                    else if(secondChoice.equalsIgnoreCase("remove")){
                         System.out.print("Enter the serial number of the item to remove: ");
                         int removeIndex = sc.nextInt()-1;
                         sc.nextLine();
@@ -337,6 +369,7 @@ public static void DisplayListofCartItem() {
                         System.out.println("Invalid choice. Try again.");
                     }
                 }
+                break;
                 
             }
         }
@@ -353,7 +386,7 @@ public static void DisplayListofCartItem() {
         }
         if (totalBill>0){
             DisplayListofCartItem();
-            float grandtotal = totalBill;
+            grandtotal = totalBill;
             discount = totalDiscount(totalBill);
             totalBill-=discount;
             System.out.println("your Grand total is: " + grandtotal);
