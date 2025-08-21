@@ -1,6 +1,7 @@
 import java.util.*;
 import java.io.*;
-    //User class for user managment
+
+
 class User {
     private String username;
     private String password;
@@ -10,19 +11,6 @@ class User {
     public User(String username, String password, String role) {
         this.username = username;
         this.password = password;
-        this.role = role;
-    }
-
-    // Setters
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setRole(String role) {
         this.role = role;
     }
 
@@ -38,23 +26,157 @@ class User {
     public String getRole() {
         return role;
     }
+
+    // Convert user to file format
+    public String toFileString() {
+        return username + "," + password + "," + role;
+    }
+
+    // Create user from file line
+    public static User fromFileString(String line) {
+        String[] parts = line.split(",");
+        if (parts.length == 3) {
+            return new User(parts[0], parts[1], parts[2]);
+        }
+        return null;
+    }
 }
 
 
-
-
-class UserManager{
+class UserManager {
     private List<User> users;
     private File file;
 
-    public void signUp(){
-
+    // Constructor
+    public UserManager(String fileName) {
+        this.file = new File(fileName);
+        this.users = new ArrayList<>();
+        loadUsersFromFile();
     }
-    public void logIn(){
 
+// Load users from file
+private void loadUsersFromFile() {
+    try {
+        if (!file.exists()) {
+            file.createNewFile();  // auto-create if missing
+            System.out.println("📂 User file created: " + file.getName());
+            return; // nothing to load since it's new
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                User user = User.fromFileString(line);
+                if (user != null) {
+                    users.add(user);
+                }
+            }
+        }
+
+    } catch (IOException e) {
+        System.out.println("❌ Error loading users: " + e.getMessage());
     }
-    
+}
 
+// Save users to file
+private void saveUsersToFile() {
+    try {
+        if (!file.exists()) {
+            file.createNewFile();
+            System.out.println("📂 User file created: " + file.getName());
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            for (User user : users) {
+                bw.write(user.toFileString());
+                bw.newLine();
+            }
+        }
+
+    } catch (IOException e) {
+        System.out.println("❌ Error saving users: " + e.getMessage());
+    }
+}
+
+    // Sign up new user
+    public void signUp(Scanner sc) {
+        System.out.print("Enter new username: ");
+        String username = sc.nextLine();
+
+        // Check if username already exists
+        for (User user : users) {
+            if (user.getUsername().equalsIgnoreCase(username)) {
+                System.out.println("Username already taken. Try another.");
+                return;
+            }
+        }
+
+        System.out.print("Enter password: ");
+        String password = sc.nextLine();
+
+        System.out.print("Confirm password: ");
+        String confirmPassword = sc.nextLine();
+        if (!password.equals(confirmPassword)){
+            System.out.println("Passwords do not match! Try again.");
+            return;
+        }
+
+        System.out.print("Enter role (admin/user): ");
+        String role = sc.nextLine();
+
+        User newUser = new User(username, password, role);
+        users.add(newUser);
+        saveUsersToFile();
+
+        System.out.println("Sign-up successful! You can now log in.");
+    }
+
+    // Login user
+    public User login(Scanner sc) {
+        System.out.print("Enter username: ");
+        String username = sc.nextLine();
+
+        System.out.print("Enter password: ");
+        String password = sc.nextLine();
+
+        for (User user : users) {
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                System.out.println("\n"+"\n"+ "\nLogin successful! Welcome " + user.getUsername());
+                return user;
+            }
+        }
+
+        System.out.println("Invalid username or password.");
+        return null;
+    }
+
+
+
+    public static void getUsersList(String filename){
+    File file = new File(filename);
+
+    if (!file.exists()) {
+        System.out.println("No users found (file does not exist).");
+        return;
+    }
+
+    try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+        String line;
+        int i = 1;
+        while ((line = br.readLine()) != null) {
+           
+            String[] parts = line.split(",");
+            if (parts.length == 3) {
+                String username = parts[0];
+                String role = parts[2];
+                System.out.println(i + ". Username: " + username + " | Role: " + role);
+            }
+            i++;
+        }
+    } catch (IOException e) {
+        System.out.println("Error reading users file: " + e.getMessage());
+    }
+}
 }
 
 
@@ -93,7 +215,7 @@ class Inventory {                                    //class inventory
 
     public Inventory() {                             //constructor
         itemList = new ArrayList<>();
- itemList.add(new Item("Apple", 150.0f, 50));
+itemList.add(new Item("Apple", 150.0f, 50));
 itemList.add(new Item("Banana", 60.0f, 100));
 itemList.add(new Item("Mango", 200.0f, 40));
 itemList.add(new Item("Milk", 180.0f, 30));
@@ -249,6 +371,7 @@ public class GrocreyShop{                                       // main class
 
     static Inventory inventory = new Inventory();
     static CartInventory Cartinventory = new CartInventory();
+    static UserManager userManager = new UserManager("users.txt");
 
 
     public static boolean availabilityCheck(String s){               //checking availability of item selected
@@ -304,14 +427,67 @@ public static void DisplayListofCartItem() {
     System.out.println("=============================================");
 }
 }
+public static void adminMenu(Scanner sc) {
+    while (true) {
+        System.out.println("\nEnter:\n" + "\"Add\" to add a new item\n" + "\"Remove\" to remove an item\n"+ "\"View\" to view all items\n" + "\"Logout\" to log out\n");
+        System.out.print("Your choice: ");
+        String choice = sc.nextLine().trim().toLowerCase();
+
+        switch (choice) {
+            case "add":
+                System.out.print("Enter item name: ");
+                String name = sc.nextLine();
+                System.out.print("Enter price: ");
+                float price = Float.parseFloat(sc.nextLine());
+                System.out.print("Enter quantity: ");
+                int qty = Integer.parseInt(sc.nextLine());
+
+                Item item = new Item(name, price, qty);
+                inventory.addItem(item);
+                System.out.println("Item added successfully!");
+                
+                break;
+
+            case "remove":
+                inventory.getItems();
+                System.out.print("Enter the name of the item you want to remove: ");
+                String nameToRemove = sc.nextLine().trim();
+
+                boolean found = false;
+
+                for (int i = 0; i < inventory.getItems().size(); i++) {
+                if (inventory.getItems().get(i).getName().equalsIgnoreCase(nameToRemove)) {
+                    inventory.getItems().remove(i); 
+                    System.out.println("Item \"" + nameToRemove + "\" removed successfully!");
+                    found = true;
+                    break;
+                }
+                }
+
+                if (!found) {
+                    System.out.println("Item \"" + nameToRemove + "\" not found in inventory.");
+                }
+                break;
+
+            case "view":
+                UserManager.getUsersList("users.txt");               
+                break;
+
+            case "logout":
+                System.out.println("Logging out... ");
+                return;
+            default:
+                System.out.println(" Invalid input! Please try again.");
+            }
+        }
+    }
 
 
 
-
-
-   
     public static void main(String[]args){
         Scanner sc = new Scanner(System.in);
+        
+
         float totalBill = 0f;
         int myQuantity = 0;
         float discount = 0f;
@@ -322,30 +498,8 @@ public static void DisplayListofCartItem() {
 
         System.out.println("=*=*=*=*=*=*=*=*=*=*.......WELCOME TO HOW'S GROCERY STORE........*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
         System.out.println("=*=*=*=*=*=*=*=*=*=*.............WHERE CHOICE IS YOURS..........*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
-        System.out.println("Are you "+ "\n" + "An ADMIN" + " \n"+ "A USER" + "\n");
-        String userSelection = sc.nextLine();
-        String role;
-        if(userSelection.equalsIgnoreCase("user")){
-            System.out.println("\nEnter:\n" + "\"Log in \" if account already exists\n"+ "\"Sign up\" to create new account\n");
-            role = sc.nextLine();
-            if(role.equalsIgnoreCase("log in")){
-
-            }
-            else if(role.equalsIgnoreCase("sign up")){
-
-            }
-            else{
-                System.out.println("Invalid Choice, try again");
-            }
-        else if (userSelection.equalsIgnoreCase("admin")){
-
-        }
-        else{
-            System.out.println("Invalid choice, please select a valid choice");
-            userSelection = sc.nextLine();
-        }
         while(true){
-            System.out.println("Enter:\n" + "\"shop\" to start shopping \n"+ "\"List\" for list of items\n" + "\"Cart\" to show your cart\n" +  "\"exit\" to quit shopping: ");
+            System.out.println("Enter:\n" + "\"shop\" to start shopping \n"+ "\"List\" for list of items\n" + "\"Cart\" to show your cart\n" + "\"Register\" to register yourself: " + "\"exit\" to quit shopping: ");
             String choice = sc.nextLine();
      
 
@@ -452,7 +606,89 @@ public static void DisplayListofCartItem() {
                 
             }
         }
-                
+             else if (choice.equalsIgnoreCase("Register")){
+                System.out.println("Are you "+ "\n" + "An ADMIN" + " \n"+ "A USER" + "\n");
+                String userSelection = sc.nextLine();
+                String role;
+                if(userSelection.equalsIgnoreCase("user")){
+                while (true){
+                    System.out.println("\nEnter:\n" + "\"Log in \" if account already exists\n"+ "\"Sign up\" to create new account\n"+ "\"Exit\" to to exit \n");
+                    role = sc.nextLine();
+                    if(role.equalsIgnoreCase("log in")){
+                        User loggedInUser = userManager.login(sc);
+                        if (loggedInUser != null) {
+                            System.out.println("Logged in as: " + loggedInUser.getRole()+ "\n"+ "\n" + "\n");
+                            break;
+                        }
+
+                     }
+              
+                    else if(role.equalsIgnoreCase("sign up")){
+                        userManager.signUp(sc);
+
+                    }
+                    else if(role.equalsIgnoreCase("Exit")){
+                        System.out.println("Exiting...");
+                        break;
+
+                    }
+                    else{
+                        System.out.println("Invalid Choice, try again");
+                    }
+                }
+            }
+            else if(userSelection.equalsIgnoreCase("admin")){
+                System.out.println("Enter secret code for an ADMIN'S POWERS:");
+                String secretCode = sc.nextLine();
+                if(secretCode.equals("SCARFACE")){
+                while (true){
+                    System.out.println("\nEnter:\n" + "\"Log in \" if account already exists\n"+ "\"Sign up\" to create new account\n"+ "\"Exit\" to to exit \n");
+                    role = sc.nextLine();
+                    if(role.equalsIgnoreCase("log in")){
+                        User loggedInUser = userManager.login(sc);
+                        if (loggedInUser != null) {
+                            System.out.println("Logged in as: " + loggedInUser.getRole()+ "\n"+ "\n" + "\n");
+                            break;
+                        }
+
+                     }
+              
+                    else if(role.equalsIgnoreCase("sign up")){
+                        userManager.signUp(sc);
+
+                    }
+                    else if(role.equalsIgnoreCase("Exit")){
+                        System.out.println("Exiting...");
+                        break;
+
+                    }
+                    else{
+                        System.out.println("Invalid Choice, try again");
+                     }
+                }
+
+                adminMenu(sc);       //if log in as an admin then showing his roles
+
+                }
+                else{
+                    System.out.println("**************************************************");
+                    System.out.println("*                                                *");
+                    System.out.println("*   Sorry my dear!                               *");
+                    System.out.println("*   You can't become Admin                       *");
+                    System.out.println("*   Until you have permission from HOW's owner   *");
+                    System.out.println("*                  SHAZIL                        *");
+                    System.out.println("*                                                *");
+                    System.out.println("**************************************************");
+                    break;
+                }
+            }
+ 
+        else{
+            System.out.println("Invalid choice, please select a valid choice");
+            userSelection = sc.nextLine();
+        }
+
+             }   
         
             else if(choice.equalsIgnoreCase("exit")){                          //if select exit then
                 System.out.println("=*=*=*=*=*=*=*=*=*=*.......THANKS FOR visiting HOW'S!!......*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
@@ -472,13 +708,9 @@ public static void DisplayListofCartItem() {
             System.out.println("your discount is: " + discount);
             System.out.println("your final total bill is: " + totalBill + "\n.....=*=*=*=*=*=*=*=Happy Shopping with HOW'S......=*=*=*=*=*=*");
         }
-  
-
-
-
 
     sc.close();
-        }
+    }
 }
 
 
