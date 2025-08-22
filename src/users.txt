@@ -1,3 +1,3 @@
-malik,123,user
+malik,123,admin
 shazil,12345,user
 Ali,54321,user
