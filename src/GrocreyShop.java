@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 <<<<<<< HEAD
 import java.io.*;
@@ -725,7 +728,8 @@ public static void adminMenu(Scanner sc) {
 =======
 
 public class GrocreyShop {
-    public static boolean availabilityCheck(String arr[], String s) { // checking availability of ite in stock
+
+    public static boolean availabilityCheck(String arr[], String s) {
         for (int i = 0; i < arr.length; i++) {
             if (arr[i].equalsIgnoreCase(s)) {
                 return true;
@@ -734,7 +738,7 @@ public class GrocreyShop {
         return false;
     }
 
-    public static int findingIndex(String arr[], String s) { // finding index of item
+    public static int findingIndex(String arr[], String s) {
         for (int i = 0; i < arr.length; i++) {
             if (arr[i].equalsIgnoreCase(s)) {
                 return i;
@@ -743,11 +747,11 @@ public class GrocreyShop {
         return -1;
     }
 
-    public static float totalDiscount(float totalBill) { // calculating discouunt on grandtotal
+    public static float totalDiscount(float totalBill) {
         float discount = 0f;
 
         if (totalBill <= 1000) {
-            discount = 0f; // No discount
+            discount = 0f;
         } else if (totalBill <= 2000) {
             discount = (10 * totalBill) / 100;
         } else if (totalBill <= 3000) {
@@ -765,38 +769,59 @@ public class GrocreyShop {
         System.out.println(
                 "=*=*=*=*=*=*=*=*=~~~~~~~~~~.....HERE'S HOW'S ITEM LIST.....~~~~~~~~~~~~~*=*=*=*=*=*=*=*=*=*=");
         System.out.println("The list of items in our store is given below:\n");
-
         System.out.printf("%-5s %-15s %-10s %-10s\n", "No.", "Item", "Price", "Stock");
-
         for (int i = 0; i < items.length; i++) {
             System.out.printf("%-5d %-15s %-10.2f %-10d\n", (i + 1), items[i], price[i], quantity[i]);
         }
-
         System.out.println("=*=*=*=*=*=*=*=*.........Now shop as you wish with HOW'S........=*=*=*=*=*=*=*=*=*=*");
+    }
+
+    public static void saveBillToFile(
+            ArrayList<String> items,
+            ArrayList<Integer> quantities,
+            ArrayList<Float> prices,
+            float grandTotal,
+            float discount,
+            float finalTotal) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("bill_summary.txt"));
+            writer.write("===== FINAL BILL SUMMARY =====\n");
+            writer.write(String.format("%-15s %-10s %-15s %-10s\n", "Item", "Qty", "Price/Item", "Total Price"));
+
+            for (int i = 0; i < items.size(); i++) {
+                float total = quantities.get(i) * prices.get(i);
+                writer.write(String.format("%-15s %-10d %-15.2f %-10.2f\n",
+                        items.get(i), quantities.get(i), prices.get(i), total));
+            }
+
+            writer.write("-------------------------------------------\n");
+            writer.write("Grand Total: " + grandTotal + "\n");
+            writer.write("Discount: " + discount + "\n");
+            writer.write("Final Total: " + finalTotal + "\n");
+            writer.write("===========================================\n");
+            writer.close();
+            System.out.println("✔ Bill saved to bill_summary.txt");
+        } catch (IOException e) {
+            System.out.println("❌ Error saving bill: " + e.getMessage());
+        }
     }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        String items[] = new String[] { "sugar", "tea", "rice", "flour",
-                "pulses", "salt", "masalas", "milk",
-                "yougert", "juices", "dry fruits", "biscuits",
-                "snacks", "bread", "chocolates", "sweets" };
+        String items[] = new String[] { "sugar", "tea", "rice", "flour", "pulses", "salt", "masalas", "milk",
+                "yougert", "juices", "dry fruits", "biscuits", "snacks", "bread", "chocolates", "sweets" };
 
-        float price[] = new float[] { 500f, 1500f, 400f, 100f,
-                500f, 50f, 500f, 250f,
-                200f, 300f, 3000f, 250f,
-                1000f, 200f, 1500f, 1200f };
+        float price[] = new float[] { 500f, 1500f, 400f, 100f, 500f, 50f, 500f, 250f,
+                200f, 300f, 3000f, 250f, 1000f, 200f, 1500f, 1200f };
 
-        int quantity[] = new int[] { 100, 60, 200, 500,
-                300, 10, 200, 50,
-                40, 100, 200, 250,
-                300, 500, 400, 100 };
+        int quantity[] = new int[] { 100, 60, 200, 500, 300, 10, 200, 50,
+                40, 100, 200, 250, 300, 500, 400, 100 };
 
         float totalBill = 0f;
         int idx, myQuantity;
         float discount = 0f;
+        float grandtotal = 0f;
 
-        // NEW: Lists to track purchased items
         ArrayList<String> purchasedItems = new ArrayList<>();
         ArrayList<Integer> purchasedQuantities = new ArrayList<>();
         ArrayList<Float> purchasedPrices = new ArrayList<>();
@@ -805,13 +830,14 @@ public class GrocreyShop {
                 "=*=*=*=*=*=*=*=*=*=*.......WELCOME TO HOW'S GROCERY STORE........*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
         System.out.println(
                 "=*=*=*=*=*=*=*=*=*=*.............WHERE CHOICE IS YOURS..........*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
+
         while (true) {
             System.out.println("Enter\n" + "\"shop\" to start shopping \n" + "\"List\" for list of items\n"
                     + "\"exit\" to quit shopping: ");
             String choice = sc.nextLine();
 
             if (choice.equalsIgnoreCase("shop")) {
-                System.out.println("Enter your items to buy ot type \"complete\" to stop shopping");
+                System.out.println("Enter your items to buy or type \"complete\" to stop shopping");
                 while (true) {
                     System.out.print("Enter the item you want to buy: ");
                     String myItem = sc.nextLine();
@@ -824,39 +850,35 @@ public class GrocreyShop {
                         sc.nextLine();
                         idx = findingIndex(items, myItem);
                     } else {
-                        System.out.println("We are very sorry , Item is out of stock");
+                        System.out.println("We are very sorry, item is out of stock");
                         continue;
                     }
+
                     if (myQuantity <= quantity[idx]) {
-                        System.out.println("We have enough quantiy of the " + myItem + ": ");
+                        System.out.println("We have enough quantity of the " + myItem + ": ");
                         totalBill += price[idx] * myQuantity;
                         quantity[idx] -= myQuantity;
 
-                        // NEW: Store purchased item details
                         purchasedItems.add(myItem);
                         purchasedQuantities.add(myQuantity);
                         purchasedPrices.add(price[idx]);
 
                     } else {
-                        System.out.println("Oops!! we have run short of quantiy of the " + myItem + ": ");
+                        System.out.println("Oops!! we have run short of quantity of the " + myItem + ": ");
                         continue;
                     }
                 }
             } else if (choice.equalsIgnoreCase("list")) {
                 showStock(items, price, quantity);
-            }
-
-            else if (choice.equalsIgnoreCase("exit")) {
+            } else if (choice.equalsIgnoreCase("exit")) {
                 System.out.println(
                         "=*=*=*=*=*=*=*=*=*=*.......THANKS FOR visiting HOW'S!!......*=*=*=*=*=*=*=*=*=*=*=*=*=*=");
                 break;
-
             } else {
                 System.out.println("Invalid Choice! please try again with correct choice!");
             }
         }
 
-        // NEW: Display purchase summary before totals
         if (!purchasedItems.isEmpty()) {
             System.out.println("\n===== PURCHASE SUMMARY =====");
             System.out.printf("%-15s %-10s %-15s %-10s\n", "Item", "Qty", "Price/Item", "Total Price");
@@ -870,13 +892,17 @@ public class GrocreyShop {
         }
 
         if (totalBill > 0) {
-            float grandtotal = totalBill;
+            grandtotal = totalBill;
             discount = totalDiscount(totalBill);
             totalBill -= discount;
+
             System.out.println("your Grand total is: " + grandtotal);
             System.out.println("your discount is: " + discount);
             System.out.println("your final total bill is: " + totalBill
                     + "\n.....=*=*=*=*=*=*=*=Happy Shopping with HOW'S......=*=*=*=*=*=*");
+
+            // Save bill summary to file
+            saveBillToFile(purchasedItems, purchasedQuantities, purchasedPrices, grandtotal, discount, totalBill);
         }
 
         sc.close();
